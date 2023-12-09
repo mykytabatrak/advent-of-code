@@ -1,7 +1,20 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+const input = await Bun.file(`${import.meta.dir}/input.txt`).text();
 
-const path = join(import.meta.dir, "./input.txt");
-const input = await readFile(path, { encoding: "utf-8" });
+const result = input
+  .split("\n")
+  .slice(0, 10)
+  .map((line) => line.match(/\d+/g))
+  .filter((match): match is RegExpMatchArray => !!match)
+  .map((match) => match.join(""));
 
-console.log(input);
+console.log(result);
+
+const end = result.reduce((previous, current) => {
+  if (current.length === 1) {
+    return previous + Number(current);
+  } else {
+    return previous + Number(`${current[0]}${current[current.length - 1]}`);
+  }
+}, 0);
+
+console.log(end)
